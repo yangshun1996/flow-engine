@@ -1,0 +1,59 @@
+server:
+  port: 6201
+#  servlet:
+#    context-path: /flowengine
+# DataSource Config
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/flow-engine?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+    username: root
+    password: root
+
+  activiti:
+    database-schema-update: true
+    history-level: full
+    db-history-used: true
+    check-process-definitions: false
+  freemarker:
+    suffix: .ftl
+    cache: false
+    charset: UTF-8
+    contentType: text/html
+    requestContextAttribute: ctx     
+    templateLoaderPath: classpath:/templates
+    settings:
+      defaultEncoding: UTF-8
+      url_escaping_charset: UTF-8
+      locale: zh_CN
+
+##热部署
+  devtools:
+    restart:
+      enabled: false
+      additional-exclude: src/main/java
+      exclude: src/main/resources
+
+logging:
+  file:
+    # 输出的log文件名
+    name: work-flow-log
+    # 输出的文件的路径
+#    path: G:/logs
+    path: ./logs
+    # 限制日志文件的大小
+    max-size: 10MB
+    # 日志的保存天数
+    max-history: 7
+  level:
+    # 输出级别
+    root: info
+    # 特定的mapper下的输出级别
+  # xml配置文件
+  config: classpath:logback-spring.xml
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
+    map-underscore-to-camel-case: true
+    # 该配置就是将带有下划线的表字段映射为驼峰格式的实体类属性
