@@ -8,6 +8,9 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.cqcxi.flowEngine.constant.CommonConstant;
+import com.cqcxi.flowEngine.enety.ModelStatus;
+import com.cqcxi.flowEngine.service.IModelStatusService;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
@@ -47,8 +50,9 @@ public class ModelerController{
     private HistoryService historyService;
     @Autowired
     private RuntimeService runtimeService;
+    @Autowired
+	private IModelStatusService iModelStatusService;
 
-    
 	@RequestMapping("index")
 	public ModelAndView index(ModelAndView modelAndView) {
         modelAndView.setViewName("index");
@@ -120,6 +124,19 @@ public class ModelerController{
     	logger.info("流程部署入参modelId：{}",modelId);
     	Map<String, String> map = new HashMap<String, String>();
 		try {
+			//查询流程是否已经发布
+			ModelStatus getModelStatus = iModelStatusService.getById(modelId);
+			if (getModelStatus == null){
+				logger.info("部署ID:{}的模型不存在",modelId);
+				map.put("code", "FAILURE");
+				return map;
+			}
+			if (getModelStatus.getPublish() == CommonConstant.intTrue){
+				logger.info("部署ID:{}的模型已经发布，请勿重复发布",modelId);
+				map.put("code", "FAILURE");
+				return map;
+			}
+
 			Model modelData = repositoryService.getModel(modelId);
 	        byte[] bytes = repositoryService.getModelEditorSource(modelData.getId());
 	        if (bytes == null) {
@@ -135,7 +152,14 @@ public class ModelerController{
 	        		.deploy();
 	        modelData.setDeploymentId(deployment.getId());
 	        repositoryService.saveModel(modelData);
-	        map.put("code", "SUCCESS");
+
+	        //修改流程发布状态
+			ModelStatus modelStatus = new ModelStatus();
+			modelStatus.setModelId(modelId);
+			modelStatus.setPublish(CommonConstant.intTrue);
+			iModelStatusService.updateById(modelStatus);
+
+			map.put("code", "SUCCESS");
 		} catch (Exception e) {
 			logger.info("部署modelId:{}模型服务异常：{}",modelId,e);
 			map.put("code", "FAILURE");
@@ -147,7 +171,6 @@ public class ModelerController{
     /**
      * 撤销流程定义
      * @param modelId 模型ID
-     * @param result
      * @return
      */
     @ResponseBody
@@ -155,6 +178,20 @@ public class ModelerController{
     public Object revokePublish(String modelId){
     	logger.info("撤销发布流程入参modelId：{}",modelId);
     	Map<String, String> map = new HashMap<String, String>();
+
+		//查询流程是否已经撤销
+		ModelStatus getModelStatus = iModelStatusService.getById(modelId);
+		if (getModelStatus == null){
+			logger.info("部署ID:{}的模型不存在",modelId);
+			map.put("code", "FAILURE");
+			return map;
+		}
+		if (getModelStatus.getPublish() == CommonConstant.intFalse){
+			logger.info("部署ID:{}的模型已经撤销，请勿重复撤销",modelId);
+			map.put("code", "FAILURE");
+			return map;
+		}
+
 		Model modelData = repositoryService.getModel(modelId);
 		if(null != modelData){
 			try {
@@ -163,6 +200,14 @@ public class ModelerController{
 				 * 参数加true:为级联删除,会删除和当前规则相关的所有信息，包括历史 
 				 */
 				repositoryService.deleteDeployment(modelData.getDeploymentId(),true);
+
+				//修改模型发布状态
+				ModelStatus modelStatus = new ModelStatus();
+				modelStatus.setModelId(modelId);
+				modelStatus.setPublish(CommonConstant.intFalse);
+				iModelStatusService.updateById(modelStatus);
+
+
 				map.put("code", "SUCCESS");
 			} catch (Exception e) {
 				logger.error("撤销已部署流程服务异常：{}",e);
@@ -176,7 +221,6 @@ public class ModelerController{
     /**
      * 删除流程实例
      * @param modelId 模型ID
-     * @param result
      * @return
      */
     @ResponseBody
@@ -205,7 +249,6 @@ public class ModelerController{
 	/**
 	 * 拷贝模型
 	 * @param modelId 模型ID
-	 * @param result
 	 * @return
 	 */
 	@ResponseBody

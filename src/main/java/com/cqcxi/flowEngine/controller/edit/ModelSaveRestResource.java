@@ -4,15 +4,17 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
+import cn.hutool.core.lang.UUID;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.cqcxi.flowEngine.enety.ModelStatus;
+import com.cqcxi.flowEngine.service.IModelStatusService;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Model;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
-import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,8 @@ public class ModelSaveRestResource implements ModelDataJsonConstants {
   @Autowired
   private ObjectMapper objectMapper;
 
-
+  @Autowired
+  private IModelStatusService iProcdefStatusService;
 
   /**
    * 保存流程
@@ -56,7 +59,7 @@ public class ModelSaveRestResource implements ModelDataJsonConstants {
           , String name, String description
           , String json_xml, String svg_xml ) {
     try {
-      
+
       Model model = repositoryService.getModel(modelId);
       String metaInfo = model.getMetaInfo();
       if (metaInfo == null){
@@ -68,16 +71,16 @@ public class ModelSaveRestResource implements ModelDataJsonConstants {
       Object process_version = properties.get("process_version");
 
       //查询流程主键是否存在， 如果没有就创建新的
-      String processId= (String) jsonObject.getJSONObject("properties").get("process_id");
-
-//      String mId = modelMapper.queryModelByProcessId(processId);
-//      if (!modelId.equals(mId)){
-//        String uuid = "key_" + WorkFlowUtil.keyId();
-//        jsonObject.getJSONObject("properties").set("process_id",uuid);
-//        json_xml = jsonObject.toString();
-//        modelMapper.createModelProcessId(modelId, uuid);
-//      }
-
+      ModelStatus modelStatus = iProcdefStatusService.getById(modelId);
+      if (modelStatus == null){
+        String uuid = "key_" +  UUID.randomUUID().toString();
+        jsonObject.getJSONObject("properties").set("process_id",uuid);
+        json_xml = jsonObject.toString();
+        modelStatus = new ModelStatus();
+        modelStatus.setModelId(modelId);
+        modelStatus.setProcessId(uuid);
+        iProcdefStatusService.save(modelStatus);
+      }
       modelJson.put(MODEL_NAME, name);
       modelJson.put(MODEL_DESCRIPTION, description);
       model.setMetaInfo(modelJson.toString());
@@ -107,5 +110,5 @@ public class ModelSaveRestResource implements ModelDataJsonConstants {
       throw new ActivitiException("Error saving model", e);
     }
   }
-  
+
 }

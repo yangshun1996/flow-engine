@@ -118,38 +118,25 @@ public class ActivitiController {
         return HttpResp.success();
     }
 
+    @ApiOperation(value = "获取表单数据", httpMethod = "POST", response = Object.class, notes = "获取表单数据")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="taskId", value="任务Id", dataType="String", paramType="query", required=false),
+    })
+    @RequestMapping("/form")
+    public HttpResp form(
+            @RequestParam(value = "taskId", defaultValue = "")String taskId
+    ){
+        ActResult actResult = activitiService.fromData(taskId);
+        return HttpResp.success(actResult.getData());
+    }
 
-    @ApiOperation(value = "image", httpMethod = "POST", response = String.class, notes = "image")
+
+
+    @ApiOperation(value = "生成图片", httpMethod = "POST", response = String.class, notes = "image")
     @ApiImplicitParams({
             @ApiImplicitParam(name="taskId", value="taskId", dataType="String", paramType="query", required=true),
     })
     @RequestMapping("/image")
-    public HttpResp image(
-            @RequestParam(value = "taskId", defaultValue = "")String taskId
-    )   {
-            ActRuTask task = iActRuTaskService.getById(taskId);
-            String id = task.getProcInstId();
-            InputStream inputStream = activitiService.getProcessDiagram(id);
-            File file = new File("D://a.svg");
-            try {
-                file.createNewFile();
-                FileOutputStream fos = new FileOutputStream(file, false);//true表示在文件末尾追加
-                byte[] bList = new byte[100];
-                while (inputStream.read(bList)!=-1){
-                    fos.write(bList);
-                }
-                fos.close();
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return HttpResp.success();
-    }
-    @ApiOperation(value = "image", httpMethod = "POST", response = String.class, notes = "image")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="taskId", value="taskId", dataType="String", paramType="query", required=true),
-    })
-    @RequestMapping("/image2")
     public HttpResp image2(
             @RequestParam(value = "taskId", defaultValue = "")String taskId
     )   {

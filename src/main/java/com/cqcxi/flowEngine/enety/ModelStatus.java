@@ -1,6 +1,8 @@
 package com.cqcxi.flowEngine.enety;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -11,13 +13,17 @@ import lombok.Data;
  * <p>开发公司：重庆创信智能科技有限公司 </p>
  */
 @Data
-public class ProcdefStatus {
+@TableName("model_status")
+public class ModelStatus {
 
-    @TableId("PROCESS_ID")
+    @TableId("MODEL_ID")
+    private String modelId;
+
+    @TableField("PROCESS_ID")
     private String processId;
 
-    private String status;
+    private Integer status;
 
-    private String publish;
+    private Integer publish;
 
 }

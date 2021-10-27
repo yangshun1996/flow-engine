@@ -2,6 +2,7 @@ package com.cqcxi.flowEngine.enety;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
  * <p>开发公司：重庆创信智能科技有限公司 </p>
  */
 @Data
+@TableName("act_ru_task")
 public class ActRuTask  {
 
     private static final long serialVersionUID = 1L;

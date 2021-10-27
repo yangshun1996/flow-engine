@@ -7,9 +7,10 @@ import com.cqcxi.flowEngine.enety.ActRuTask;
 import com.cqcxi.flowEngine.mapper.ActRuTaskMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.bpmn.model.FormProperty;
+import org.activiti.bpmn.model.UserTask;
+import org.activiti.engine.*;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.image.ProcessDiagramGenerator;
@@ -118,28 +119,47 @@ public class ActivitiService {
     }
 
     /**
+     * 方法描述：获取节点表单数据
+     * 创建人员：杨顺
+     * 创建时间： 2021/10/27 10:12
+     * 修改人员：
+     * 修改内容：
+     * 修改时间：
+     * @param taskId
+     */
+    public ActResult fromData(String taskId){
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        //获取task对应的表单内容 需要TaskDefinitionKey
+        UserTask userTask = (UserTask) repositoryService.getBpmnModel(task.getProcessDefinitionId())
+                .getFlowElement(task.getTaskDefinitionKey());
+        List<FormProperty> formProperties = userTask.getFormProperties();
+        return ActResult.success(formProperties);
+    }
+
+
+    /**
      * 生成图片
      */
-    public InputStream getProcessDiagram(String processInstanceId) {
-        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
-                .processInstanceId(processInstanceId).singleResult();
-
-        // null check
-        if (processInstance != null) {
-            // get process model
-            BpmnModel model = repositoryService.getBpmnModel(processInstance.getProcessDefinitionId());
-
-            if (model != null && model.getLocationMap().size() > 0) {
-                ProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
-                // 生成流程图 已启动的task 高亮
-                return generator.generateDiagram(model,
-                        runtimeService.getActiveActivityIds(processInstanceId));
-                // 生成流程图 都不高亮
-//                return generator.generateDiagram(model, "宋体","宋体","宋体");
-            }
-        }
-        return null;
-    }
+//    public InputStream getProcessDiagram(String processInstanceId) {
+//        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+//                .processInstanceId(processInstanceId).singleResult();
+//
+//        // null check
+//        if (processInstance != null) {
+//            // get process model
+//            BpmnModel model = repositoryService.getBpmnModel(processInstance.getProcessDefinitionId());
+//
+//            if (model != null && model.getLocationMap().size() > 0) {
+//                ProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
+//                // 生成流程图 已启动的task 高亮
+//                return generator.generateDiagram(model,
+//                        runtimeService.getActiveActivityIds(processInstanceId));
+//                // 生成流程图 都不高亮
+////                return generator.generateDiagram(model, "宋体","宋体","宋体");
+//            }
+//        }
+//        return null;
+//    }
 
 
 }

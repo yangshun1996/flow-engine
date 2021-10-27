@@ -1,7 +1,7 @@
 package com.cqcxi.flowEngine.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.cqcxi.flowEngine.enety.ProcdefStatus;
+import com.cqcxi.flowEngine.enety.ModelStatus;
 
 /**
  * <p>类描述： 流程表 </p>
@@ -10,5 +10,5 @@ import com.cqcxi.flowEngine.enety.ProcdefStatus;
  * <p>创建日期：2021/7/13 </p>
  * <p>开发公司：重庆创信智能科技有限公司 </p>
  */
-public interface IProcdefStatusService extends IService<ProcdefStatus> {
+public interface IModelStatusService extends IService<ModelStatus> {
 }
