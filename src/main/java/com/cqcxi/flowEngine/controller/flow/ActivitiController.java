@@ -1,12 +1,15 @@
 package com.cqcxi.flowEngine.controller.flow;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.codec.Base64;
+import cn.hutool.json.JSONObject;
 import com.cqcxi.flowEngine.common.ActResult;
 import com.cqcxi.flowEngine.common.HttpResp;
 import com.cqcxi.flowEngine.enety.ActRuTask;
-import com.cqcxi.flowEngine.exception.ValidList;
 import com.cqcxi.flowEngine.image.ProcessImageService;
+import com.cqcxi.flowEngine.model.TaskCompleteDto;
 import com.cqcxi.flowEngine.model.TaskParam;
+import com.cqcxi.flowEngine.model.TaskQueryVo;
+import com.cqcxi.flowEngine.model.TaskStartDto;
 import com.cqcxi.flowEngine.service.ActivitiService;
 import com.cqcxi.flowEngine.service.IActRuTaskService;
 import io.swagger.annotations.Api;
@@ -31,7 +34,7 @@ import java.util.Map;
  * <p>开发公司：重庆创信智能科技有限公司 </p>
  */
 @CrossOrigin
-@Api(description = "activiti相关流程")
+@Api(description = "流程基础功能")
 @RestController
 @RequestMapping("/act")
 @Slf4j
@@ -48,16 +51,15 @@ public class ActivitiController {
 
     @ApiOperation(value = "启动流程", httpMethod = "POST", response = Object.class, notes = "启动流程")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="processId", value="流程Id", dataType="String", paramType="query", required=false),
     })
     @RequestMapping("/task/start")
     public HttpResp start(
-            @RequestParam(value = "processId", defaultValue = "")String processId
+            @RequestBody @Validated TaskStartDto startDto
     ){
-        ActResult actResult = activitiService.startProcess(processId);
+        ActResult actResult = activitiService.startProcess(startDto);
         if (actResult.getResult()){
             //查询代办任务
-            List<ActRuTask> actRuTasks = iActRuTaskService.selectByProcInstId((String) actResult.getData());
+            List<TaskQueryVo> actRuTasks = iActRuTaskService.selectByProcInstId((String) actResult.getData());
             HttpResp success = HttpResp.success();
             success.setData(actRuTasks);
             return success;
@@ -68,30 +70,25 @@ public class ActivitiController {
 
     @ApiOperation(value = "完成任务", httpMethod = "POST", response = Object.class, notes = "完成任务")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="taskId", value="任务Id", dataType="String", paramType="query", required=false),
     })
     @RequestMapping("/task/approve")
     public HttpResp completeTask(
-            @RequestParam(value = "taskId", defaultValue = "")String taskId,
-            @RequestBody @Validated ValidList<TaskParam> taskParams
-    ){
-        if (StrUtil.isBlank(taskId)){
-            return HttpResp.param("任务不能为空");
-        }
+            @RequestBody @Validated TaskCompleteDto taskCompleteDto
+            ){
         //查询流程procInstId
-        ActRuTask task = iActRuTaskService.getById(taskId);
+        ActRuTask task = iActRuTaskService.getById(taskCompleteDto.getTaskId());
 
         //任务参数
-        List<TaskParam> params = taskParams.getList();
+        List<TaskParam> params = taskCompleteDto.getTaskParams();
         Map<String, Object> paramMap = new HashMap<>();
         for (TaskParam param : params) {
             paramMap.put(param.getName(), param.getVal());
         }
 
-        activitiService.completeTask(taskId, paramMap);
+        activitiService.completeTask(taskCompleteDto.getTaskId(), paramMap);
 
         //查询代办任务
-        List<ActRuTask> actRuTasks = iActRuTaskService.selectByProcInstId(task.getProcInstId());
+        List<TaskQueryVo> actRuTasks = iActRuTaskService.selectByProcInstId(task.getProcInstId());
         return HttpResp.success(actRuTasks);
     }
 
@@ -122,12 +119,28 @@ public class ActivitiController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="taskId", value="任务Id", dataType="String", paramType="query", required=false),
     })
-    @RequestMapping("/form")
+    @RequestMapping("/form/query")
     public HttpResp form(
             @RequestParam(value = "taskId", defaultValue = "")String taskId
     ){
         ActResult actResult = activitiService.fromData(taskId);
         return HttpResp.success(actResult.getData());
+    }
+
+    @ApiOperation(value = "获取发起人", httpMethod = "POST", response = Object.class, notes = "获取发起人")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="taskId", value="任务Id", dataType="String", paramType="query", required=false),
+    })
+    @RequestMapping("/initiator/query")
+    public HttpResp starter(
+            @RequestParam(value = "taskId", defaultValue = "")String taskId
+    ){
+        ActResult actResult = activitiService.queryStarter(taskId);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("initiator",actResult.getData());
+
+        return HttpResp.success(jsonObject);
     }
 
 
@@ -137,25 +150,25 @@ public class ActivitiController {
             @ApiImplicitParam(name="taskId", value="taskId", dataType="String", paramType="query", required=true),
     })
     @RequestMapping("/image")
-    public HttpResp image2(
+    public HttpResp image(
             @RequestParam(value = "taskId", defaultValue = "")String taskId
-    )   {
+    ) {
         ActRuTask task = iActRuTaskService.getById(taskId);
         String id = task.getProcInstId();
+        String base = null;
         try {
-        InputStream inputStream = processImageService.getFlowImgByProcInstId(id);
-        File file = new File("D://b.svg");
-            file.createNewFile();
-            FileOutputStream fos = new FileOutputStream(file, false);//true表示在文件末尾追加
-            byte[] bList = new byte[100];
-            while (inputStream.read(bList)!=-1){
-                fos.write(bList);
-            }
-            fos.close();
-            inputStream.close();
+            InputStream image = processImageService.getFlowImgByProcInstId(id);
+            base = Base64.encode(image);
+            image.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return HttpResp.success();
+        HttpResp resp = HttpResp.success();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("base64",base);
+
+        resp.setData(jsonObject);
+        return resp;
     }
 }

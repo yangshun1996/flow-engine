@@ -5,14 +5,19 @@ import cn.hutool.core.util.RuntimeUtil;
 import com.cqcxi.flowEngine.common.ActResult;
 import com.cqcxi.flowEngine.enety.ActRuTask;
 import com.cqcxi.flowEngine.mapper.ActRuTaskMapper;
+import com.cqcxi.flowEngine.model.TaskQueryVo;
+import com.cqcxi.flowEngine.model.TaskStartDto;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FormProperty;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.activiti.image.ProcessDiagramGenerator;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +44,8 @@ public class ActivitiService {
     private RepositoryService repositoryService;
     @Autowired
     private ActRuTaskMapper actRuTaskMapper;
+    @Autowired
+    private HistoryService historyService;
 
     /**
      * 方法描述：启动流程
@@ -47,10 +54,11 @@ public class ActivitiService {
      * 修改人员：
      * 修改内容：
      * 修改时间：
-     * @param processId 流程ID
      */
-    public ActResult startProcess (String processId){
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processId);
+    public ActResult startProcess (TaskStartDto startDto){
+        Authentication.setAuthenticatedUserId(startDto.getUserId());//设置发起人
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(startDto.getProcessId(),startDto.getBusinessId());
+//        runtimeService.updateBusinessKey(processInstance.getProcessInstanceId(), startDto.getBusinessId());//设置业务Id
         return ActResult.success(processInstance.getProcessInstanceId());
     }
 
@@ -66,7 +74,7 @@ public class ActivitiService {
      */
     public ActResult completeTask (String taskId, Map<String, Object> param){
         //没有参数
-        if (param == null || param.size() == 0){
+        if (param == null || param.isEmpty()){
             taskService.complete(taskId );
         }
         //有参数
@@ -86,17 +94,19 @@ public class ActivitiService {
      * @param assignees 代理人Id
      */
     public ActResult queryTask(List<String> assignees){
-        List<HashMap<String,Object>> maps = new ArrayList<>();
+        List<TaskQueryVo> taskVos = new ArrayList<>();
         List<Task> tasks = taskService.createTaskQuery().taskAssigneeIds(assignees).list();
         for (Task task : tasks) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
-            map.put("task_Id",task.getId());
-            map.put("task_Name",task.getName());
-            map.put("assignee",task.getAssignee());
-            map.put("createTime", DateUtil.dateNew(task.getCreateTime()).toString());
-            maps.add(map);
+            TaskQueryVo vo = new TaskQueryVo();
+            vo.setId(task.getId());
+            vo.setName(task.getName());
+            vo.setAssignee(task.getAssignee());
+            vo.setCreateTime(DateUtil.dateNew(task.getCreateTime()).toString());
+            vo.setBusinessId(task.getBusinessKey());
+            vo.setInitiator(actRuTaskMapper.queryStarterByTaskId(task.getId()));
+            taskVos.add(vo);
         }
-        return ActResult.success(maps);
+        return ActResult.success(taskVos);
     }
 
     /**
@@ -136,10 +146,25 @@ public class ActivitiService {
         return ActResult.success(formProperties);
     }
 
-
     /**
-     * 生成图片
+     * 方法描述：获取任务发起人
+     * 创建人员：杨顺
+     * 创建时间： 2021/10/27 13:33
+     * 修改人员：
+     * 修改内容：
+     * 修改时间：
+     * @param taskId 任务ID
      */
+    public ActResult queryStarter(String taskId){
+        ActRuTask actRuTask = actRuTaskMapper.selectById(taskId);
+        String startUserId = historyService.createHistoricProcessInstanceQuery().processInstanceId(actRuTask.getProcInstId()).singleResult().getStartUserId();//获取发起人
+        return ActResult.success(startUserId);
+    }
+
+
+//    /**
+//     * 生成图片
+//     */
 //    public InputStream getProcessDiagram(String processInstanceId) {
 //        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
 //                .processInstanceId(processInstanceId).singleResult();

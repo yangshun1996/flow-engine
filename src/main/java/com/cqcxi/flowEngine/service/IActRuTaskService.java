@@ -2,6 +2,7 @@ package com.cqcxi.flowEngine.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cqcxi.flowEngine.enety.ActRuTask;
+import com.cqcxi.flowEngine.model.TaskQueryVo;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public interface IActRuTaskService extends IService<ActRuTask> {
     //根据流程部署ID查询
-    List<ActRuTask> selectByProcInstId (String id);
+    List<TaskQueryVo> selectByProcInstId (String id);
 
 
 }

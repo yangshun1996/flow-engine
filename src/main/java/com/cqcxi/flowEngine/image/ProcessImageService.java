@@ -1,11 +1,9 @@
 package com.cqcxi.flowEngine.image;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.util.Base64;
 
 /**
  * <p>类描述：  </p>
@@ -23,7 +21,6 @@ public class ProcessImageService {
 
     /**
      * 根据流程实例Id获取流程图
-     *
      * @param procInstId 流程实例id
      * @return inputStream
      * @throws Exception exception

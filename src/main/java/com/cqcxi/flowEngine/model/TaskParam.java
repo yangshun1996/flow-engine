@@ -1,7 +1,8 @@
 package com.cqcxi.flowEngine.model;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotBlank;
 
 
 /**
