@@ -1,23 +1,20 @@
 package com.cqcxi.flowEngine.controller.edit;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
 import com.cqcxi.flowEngine.constant.CommonConstant;
 import com.cqcxi.flowEngine.enety.ModelStatus;
-import com.cqcxi.flowEngine.service.IModelStatusService;
+import com.cqcxi.flowEngine.service.ModelStatusService;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
-import org.activiti.engine.impl.cfg.IdGenerator;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.Model;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -51,7 +48,7 @@ public class ModelerController{
     @Autowired
     private RuntimeService runtimeService;
     @Autowired
-	private IModelStatusService iModelStatusService;
+	private ModelStatusService iModelStatusService;
 
 	@RequestMapping("index")
 	public ModelAndView index(ModelAndView modelAndView) {

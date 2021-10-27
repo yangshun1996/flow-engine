@@ -13,7 +13,7 @@ import java.util.List;
  * <p>创建日期：2021/7/13 </p>
  * <p>开发公司：重庆创信智能科技有限公司 </p>
  */
-public interface IActRuTaskService extends IService<ActRuTask> {
+public interface ActRuTaskService extends IService<ActRuTask> {
     //根据流程部署ID查询
     List<TaskQueryVo> selectByProcInstId (String id);
 

@@ -8,7 +8,7 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.cqcxi.flowEngine.enety.ModelStatus;
-import com.cqcxi.flowEngine.service.IModelStatusService;
+import com.cqcxi.flowEngine.service.ModelStatusService;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
@@ -43,7 +43,7 @@ public class ModelSaveRestResource implements ModelDataJsonConstants {
   private ObjectMapper objectMapper;
 
   @Autowired
-  private IModelStatusService iProcdefStatusService;
+  private ModelStatusService iProcdefStatusService;
 
   /**
    * 保存流程

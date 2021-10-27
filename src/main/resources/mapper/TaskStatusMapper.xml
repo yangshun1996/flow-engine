@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqcxi.flowEngine.mapper.TaskStatusMapper">
+
+    <resultMap id="BaseResultMap" type="com.cqcxi.flowEngine.enety.TaskStatus">
+            <id property="taskId" column="TASK_ID" jdbcType="VARCHAR"/>
+            <result property="hidde" column="HIDDE" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        TASK_ID,HIDDE
+    </sql>
+</mapper>

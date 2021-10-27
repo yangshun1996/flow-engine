@@ -3,7 +3,7 @@ package com.cqcxi.flowEngine.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqcxi.flowEngine.enety.ModelStatus;
 import com.cqcxi.flowEngine.mapper.ModelStatusMapper;
-import com.cqcxi.flowEngine.service.IModelStatusService;
+import com.cqcxi.flowEngine.service.ModelStatusService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,5 +14,5 @@ import org.springframework.stereotype.Service;
  * <p>开发公司：重庆创信智能科技有限公司 </p>
  */
 @Service
-public class ModelStatusServiceImpl extends ServiceImpl<ModelStatusMapper, ModelStatus> implements IModelStatusService {
+public class ModelStatusServiceImpl extends ServiceImpl<ModelStatusMapper, ModelStatus> implements ModelStatusService {
 }

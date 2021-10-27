@@ -10,5 +10,5 @@ import com.cqcxi.flowEngine.enety.ModelStatus;
  * <p>创建日期：2021/7/13 </p>
  * <p>开发公司：重庆创信智能科技有限公司 </p>
  */
-public interface IModelStatusService extends IService<ModelStatus> {
+public interface ModelStatusService extends IService<ModelStatus> {
 }

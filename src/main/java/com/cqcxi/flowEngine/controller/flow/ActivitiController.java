@@ -11,7 +11,7 @@ import com.cqcxi.flowEngine.model.TaskParam;
 import com.cqcxi.flowEngine.model.TaskQueryVo;
 import com.cqcxi.flowEngine.model.TaskStartDto;
 import com.cqcxi.flowEngine.service.ActivitiService;
-import com.cqcxi.flowEngine.service.IActRuTaskService;
+import com.cqcxi.flowEngine.service.ActRuTaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>类描述： 流程工作接口</p>
+ * <p>类描述： 流程基本工作接口</p>
  * <p>版权：ChongQingCXI Co.Itd All right reserved. 2021/10/25 11:30  </p>
  * <p>创建人员： 杨顺 </p>
  * <p>创建日期：2021/10/25 </p>
@@ -44,7 +44,7 @@ public class ActivitiController {
     private ActivitiService activitiService;
 
     @Autowired
-    private IActRuTaskService iActRuTaskService;
+    private ActRuTaskService iActRuTaskService;
 
     @Autowired
     private ProcessImageService processImageService;
@@ -126,6 +126,7 @@ public class ActivitiController {
         ActResult actResult = activitiService.fromData(taskId);
         return HttpResp.success(actResult.getData());
     }
+
 
     @ApiOperation(value = "获取发起人", httpMethod = "POST", response = Object.class, notes = "获取发起人")
     @ApiImplicitParams({
