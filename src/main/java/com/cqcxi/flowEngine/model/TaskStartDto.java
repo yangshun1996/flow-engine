@@ -1,5 +1,6 @@
 package com.cqcxi.flowEngine.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -14,12 +15,15 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class TaskStartDto {
 
+    @ApiModelProperty("流程Id")
     @NotBlank(message = "请传入流程Id")
     private String processId;
 
+    @ApiModelProperty("用户Id")
     @NotBlank(message = "请传入用户Id")
     private String userId;
 
+    @ApiModelProperty("业务Id")
     @NotBlank(message = "请传入业务Id")
     private String businessId;
 }

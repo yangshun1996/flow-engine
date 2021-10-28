@@ -148,7 +148,7 @@ public class ActivitiController {
 
     @ApiOperation(value = "生成图片", httpMethod = "POST", response = String.class, notes = "image")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="taskId", value="taskId", dataType="String", paramType="query", required=true),
+            @ApiImplicitParam(name="taskId", value="任务Id", dataType="String", paramType="query", required=true),
     })
     @RequestMapping("/image")
     public HttpResp image(

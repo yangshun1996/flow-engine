@@ -7,9 +7,19 @@
     <resultMap id="BaseResultMap" type="com.cqcxi.flowEngine.enety.TaskStatus">
             <id property="taskId" column="TASK_ID" jdbcType="VARCHAR"/>
             <result property="hidde" column="HIDDE" jdbcType="INTEGER"/>
+            <result property="businessId" column="BUSINESS_ID" jdbcType="VARCHAR"/>
+            <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        TASK_ID,HIDDE
+        TASK_ID,HIDDE,BUSINESS_ID,
+        CREATE_TIME
     </sql>
+    <select id="getByBusinessId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from task_status
+        where
+        BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
+    </select>
 </mapper>

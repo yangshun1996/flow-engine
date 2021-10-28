@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.Date;
 import lombok.Data;
 
 /**
@@ -25,6 +26,16 @@ public class TaskStatus implements Serializable {
      */
     private Integer hidde;
 
+    /**
+     * 业务Id
+     */
+    private String businessId;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
@@ -41,7 +52,9 @@ public class TaskStatus implements Serializable {
         }
         TaskStatus other = (TaskStatus) that;
         return (this.getTaskId() == null ? other.getTaskId() == null : this.getTaskId().equals(other.getTaskId()))
-            && (this.getHidde() == null ? other.getHidde() == null : this.getHidde().equals(other.getHidde()));
+            && (this.getHidde() == null ? other.getHidde() == null : this.getHidde().equals(other.getHidde()))
+            && (this.getBusinessId() == null ? other.getBusinessId() == null : this.getBusinessId().equals(other.getBusinessId()))
+            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()));
     }
 
     @Override
@@ -50,6 +63,8 @@ public class TaskStatus implements Serializable {
         int result = 1;
         result = prime * result + ((getTaskId() == null) ? 0 : getTaskId().hashCode());
         result = prime * result + ((getHidde() == null) ? 0 : getHidde().hashCode());
+        result = prime * result + ((getBusinessId() == null) ? 0 : getBusinessId().hashCode());
+        result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         return result;
     }
 
@@ -61,6 +76,8 @@ public class TaskStatus implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", taskId=").append(taskId);
         sb.append(", hidde=").append(hidde);
+        sb.append(", businessId=").append(businessId);
+        sb.append(", createTime=").append(createTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

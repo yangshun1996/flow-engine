@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
             return HttpResp.param(stringBuilder.toString());
         }
         e.printStackTrace();
-        log.error(e.getMessage());
+        log.error(e.getMessage(),e);
         return HttpResp.error();
     }
 

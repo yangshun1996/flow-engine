@@ -2,9 +2,14 @@ package com.cqcxi.flowEngine.service;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RuntimeUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.cqcxi.flowEngine.common.ActResult;
+import com.cqcxi.flowEngine.constant.CommonConstant;
 import com.cqcxi.flowEngine.enety.ActRuTask;
+import com.cqcxi.flowEngine.enety.TaskStatus;
 import com.cqcxi.flowEngine.mapper.ActRuTaskMapper;
+import com.cqcxi.flowEngine.mapper.TaskStatusMapper;
 import com.cqcxi.flowEngine.model.TaskQueryVo;
 import com.cqcxi.flowEngine.model.TaskStartDto;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>类描述： 工作流功能实现</p>
@@ -46,6 +52,8 @@ public class ActivitiService {
     private ActRuTaskMapper actRuTaskMapper;
     @Autowired
     private HistoryService historyService;
+    @Autowired
+    private TaskStatusMapper taskStatusMapper;
 
     /**
      * 方法描述：启动流程
@@ -96,6 +104,23 @@ public class ActivitiService {
     public ActResult queryTask(List<String> assignees){
         List<TaskQueryVo> taskVos = new ArrayList<>();
         List<Task> tasks = taskService.createTaskQuery().taskAssigneeIds(assignees).list();
+
+        //移除被隐藏的任务
+        QueryWrapper<TaskStatus> wrapper = new QueryWrapper<>();
+        wrapper.eq("HIDDE", CommonConstant.intTrue);
+        List<TaskStatus> taskStatuses = taskStatusMapper.selectList(wrapper);
+        List<String> taskIds = taskStatuses.stream().map(t -> t.getTaskId()).collect(Collectors.toList());
+
+        Iterator<Task> iterator = tasks.iterator();
+        while (iterator.hasNext()){
+            Task next = iterator.next();
+            for (String taskId : taskIds) {
+                if (next.getId().equals(taskId)){
+                    iterator.remove();
+                }
+            }
+        }
+
         for (Task task : tasks) {
             TaskQueryVo vo = new TaskQueryVo();
             vo.setId(task.getId());
@@ -159,6 +184,19 @@ public class ActivitiService {
         ActRuTask actRuTask = actRuTaskMapper.selectById(taskId);
         String startUserId = historyService.createHistoricProcessInstanceQuery().processInstanceId(actRuTask.getProcInstId()).singleResult().getStartUserId();//获取发起人
         return ActResult.success(startUserId);
+    }
+
+    /**
+     * 方法描述：任务转交
+     * 创建人员：杨顺
+     * 创建时间： 2021/10/28 16:18
+     * 修改人员：
+     * 修改内容：
+     * 修改时间：
+     */
+    public ActResult entrustTask(String taskId, String assigneeId){
+        taskService.setAssignee(taskId, assigneeId);
+        return ActResult.success();
     }
 
 
