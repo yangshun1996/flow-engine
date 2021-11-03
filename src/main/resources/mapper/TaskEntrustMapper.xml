@@ -4,19 +4,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cqcxi.flowEngine.mapper.TaskEntrustMapper">
 
-    <resultMap id="BaseResultMap" type="com.cqcxi.flowEngine.enety.TaskEntrust">
+    <resultMap id="BaseResultMap" type="com.cqcxi.flowEngine.entity.TaskEntrust">
             <id property="id" column="ID" jdbcType="INTEGER"/>
-            <result property="taskId" column="TASK_ID" jdbcType="VARCHAR"/>
-            <result property="userId" column="USER_ID" jdbcType="VARCHAR"/>
+            <result property="originalAssigneeId" column="ORIGINAL_ASSIGNEE_ID" jdbcType="VARCHAR"/>
             <result property="assigneeId" column="ASSIGNEE_ID" jdbcType="VARCHAR"/>
+            <result property="dayOfWeek" column="DAY_OF_WEEK" jdbcType="VARCHAR"/>
+            <result property="startDate" column="START_DATE" jdbcType="DATE"/>
+            <result property="endDate" column="END_DATE" jdbcType="DATE"/>
+            <result property="startHour" column="START_HOUR" jdbcType="TIME"/>
+            <result property="endHour" column="END_HOUR" jdbcType="TIME"/>
+            <result property="cron" column="CRON" jdbcType="VARCHAR"/>
+            <result property="cronNote" column="CRON_NOTE" jdbcType="VARCHAR"/>
+            <result property="type" column="TYPE" jdbcType="INTEGER"/>
             <result property="status" column="STATUS" jdbcType="INTEGER"/>
-            <result property="startTime" column="START_TIME" jdbcType="TIMESTAMP"/>
-            <result property="endTime" column="END_TIME" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        ID,TASK_ID,USER_ID,
-        ASSIGNEE_ID,STATUS,START_TIME,
-        END_TIME
+        ID,ORIGINAL_ASSIGNEE_ID,ASSIGNEE_ID,
+        DAY_OF_WEEK,START_DATE,END_DATE,
+        START_HOUR,END_HOUR,CRON,
+        CRON_NOTE,TYPE,STATUS
     </sql>
 </mapper>

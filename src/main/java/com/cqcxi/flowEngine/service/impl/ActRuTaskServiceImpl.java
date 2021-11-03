@@ -1,6 +1,6 @@
 package com.cqcxi.flowEngine.service.impl;
 
-import com.cqcxi.flowEngine.enety.ActRuTask;
+import com.cqcxi.flowEngine.entity.ActRuTask;
 import com.cqcxi.flowEngine.mapper.ActRuTaskMapper;
 import com.cqcxi.flowEngine.model.TaskQueryVo;
 import com.cqcxi.flowEngine.service.ActRuTaskService;

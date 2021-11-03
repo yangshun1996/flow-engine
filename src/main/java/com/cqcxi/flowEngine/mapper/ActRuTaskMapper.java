@@ -1,7 +1,7 @@
 package com.cqcxi.flowEngine.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.cqcxi.flowEngine.enety.ActRuTask;
+import com.cqcxi.flowEngine.entity.ActRuTask;
 import com.cqcxi.flowEngine.model.TaskQueryVo;
 import org.apache.ibatis.annotations.Param;
 

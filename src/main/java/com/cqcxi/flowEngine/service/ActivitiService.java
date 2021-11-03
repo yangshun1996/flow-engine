@@ -1,34 +1,25 @@
 package com.cqcxi.flowEngine.service;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.RuntimeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.cqcxi.flowEngine.common.ActResult;
 import com.cqcxi.flowEngine.constant.CommonConstant;
-import com.cqcxi.flowEngine.enety.ActRuTask;
-import com.cqcxi.flowEngine.enety.TaskStatus;
+import com.cqcxi.flowEngine.entity.ActRuTask;
+import com.cqcxi.flowEngine.entity.TaskStatus;
 import com.cqcxi.flowEngine.mapper.ActRuTaskMapper;
 import com.cqcxi.flowEngine.mapper.TaskStatusMapper;
 import com.cqcxi.flowEngine.model.TaskQueryVo;
 import com.cqcxi.flowEngine.model.TaskStartDto;
 import lombok.extern.slf4j.Slf4j;
-import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FormProperty;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.*;
-import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.identity.Authentication;
-import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.activiti.engine.task.TaskQuery;
-import org.activiti.image.ProcessDiagramGenerator;
-import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 

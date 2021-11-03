@@ -8,6 +8,11 @@ package com.cqcxi.flowEngine.util;
  * <p>开发公司：重庆创信智能科技有限公司 </p>
  */
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -190,8 +195,6 @@ public class TimeHelper {
         int year2 = calendar2.get(Calendar.YEAR);
         int month1 = calendar1.get(Calendar.MONTH);
         int month2 = calendar2.get(Calendar.MONTH);
-        System.out.println(year1 + "  " + month1);
-        System.out.println(year2 + "  " + month2);
         return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH);
     }
 
@@ -425,4 +428,26 @@ public class TimeHelper {
 
     }
 
+    /**
+     * 获取两个日期中的所有日期,并转换为表后缀
+     *
+     * @param begin 格式:yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+     * @param end   格式:yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+     */
+    public static HashMap<Integer, List<Integer>>  getDetHashList(String begin, String end) {
+        HashMap<Integer, List<Integer>> result = new HashMap<>();
+        String btime = begin.substring(0, 10);//yyyy-MM-dd
+        String etime = end.substring(0, 10);
+
+        Date bDate = DateUtil.parse(btime, DatePattern.NORM_DATE_PATTERN);//yyyy-MM-dd
+        Date eDate = DateUtil.parse(etime, DatePattern.NORM_DATE_PATTERN);
+        List<DateTime> dateList = DateUtil.rangeToList(bDate, eDate, DateField.DAY_OF_YEAR);//创建日期范围生成器
+        for (DateTime dt : dateList) {
+            if (!result.containsKey(dt.month() + 1)){
+                result.put(dt.month() + 1, new ArrayList<>());
+            }
+            result.get(dt.month() + 1).add(dt.dayOfMonth());
+        }
+        return result;
+    }
 }

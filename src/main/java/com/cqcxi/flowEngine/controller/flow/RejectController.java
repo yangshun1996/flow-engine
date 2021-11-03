@@ -1,12 +1,9 @@
 package com.cqcxi.flowEngine.controller.flow;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cqcxi.flowEngine.common.ActResult;
 import com.cqcxi.flowEngine.common.HttpResp;
 import com.cqcxi.flowEngine.constant.CommonConstant;
-import com.cqcxi.flowEngine.enety.TaskStatus;
+import com.cqcxi.flowEngine.entity.TaskStatus;
 import com.cqcxi.flowEngine.model.TaskHideDto;
 import com.cqcxi.flowEngine.service.TaskStatusService;
 import io.swagger.annotations.Api;
@@ -18,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Struct;
 import java.util.List;
 
 /**

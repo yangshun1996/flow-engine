@@ -1,7 +1,7 @@
 package com.cqcxi.flowEngine.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.cqcxi.flowEngine.enety.ModelStatus;
+import com.cqcxi.flowEngine.entity.ModelStatus;
 
 /**
  * <p>类描述： 流程表 </p>

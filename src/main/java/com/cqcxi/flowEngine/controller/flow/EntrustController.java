@@ -1,13 +1,12 @@
 package com.cqcxi.flowEngine.controller.flow;
 
-import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.cqcxi.flowEngine.common.HttpResp;
-import com.cqcxi.flowEngine.constant.CommonConstant;
-import com.cqcxi.flowEngine.enety.TaskEntrust;
 import com.cqcxi.flowEngine.model.EntrustCreateDto;
-import com.cqcxi.flowEngine.model.TaskHideDto;
+import com.cqcxi.flowEngine.service.ActRuTaskService;
 import com.cqcxi.flowEngine.service.ActivitiService;
 import com.cqcxi.flowEngine.service.TaskEntrustService;
+import com.cqcxi.flowEngine.util.TaskScheduleModel;
 import com.cqcxi.flowEngine.util.TimeHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
@@ -15,10 +14,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * <p>类描述： 任务委托 </p>
@@ -39,26 +37,35 @@ public class EntrustController {
     @Autowired
     private ActivitiService activitiService;
 
+    @Autowired
+    private ActRuTaskService actRuTaskService;
+
+
     @ApiOperation(value = "创建委托任务", httpMethod = "POST", response = Object.class, notes = "创建委托任务")
     @ApiImplicitParams({
     })
-    @RequestMapping("/create")
-    public HttpResp create(
-        @RequestBody @Validated EntrustCreateDto entrustCreateDto
+    @RequestMapping("/task/create")
+    public HttpResp taskCreate(
+            @RequestBody @Validated EntrustCreateDto entrustCreateDto
     ){
-        TaskEntrust taskEntrust = new TaskEntrust();
-        taskEntrust.setUserId(entrustCreateDto.getUserId());
-        taskEntrust.setAssigneeId(entrustCreateDto.getAssigneeId());
-        taskEntrust.setTaskId(entrustCreateDto.getTaskId());
-        //校验时间格式
-        taskEntrust.setStartTime(TimeHelper.isValidBirth(entrustCreateDto.getStartTime()) ? TimeHelper.stringToDate(entrustCreateDto.getStartTime()) : null);
-        taskEntrust.setEndTime(TimeHelper.isValidBirth(entrustCreateDto.getEndTime()) ? TimeHelper.stringToDate(entrustCreateDto.getEndTime()) : null);
-        taskEntrust.setStatus(TimeHelper.isValidBirth(entrustCreateDto.getStartTime()) ? CommonConstant.intFalse : CommonConstant.intTrue);
-        taskEntrustService.save(taskEntrust);
+        if (entrustCreateDto.getType() == TaskScheduleModel.JobType.WEEK.getType()){
+            if (entrustCreateDto.getDayOfWeek() == null || entrustCreateDto.getDayOfWeek().length == 0){
+                return HttpResp.param("请传入星期");
+            }
+        }
+        if (entrustCreateDto.getType() == TaskScheduleModel.JobType.DATE.getType()){
+            if (StrUtil.isBlank(entrustCreateDto.getStartDate()) || !TimeHelper.isValidDate(entrustCreateDto.getStartDate())){
+                return HttpResp.param("请传入开始日期");
+            }
+            if (StrUtil.isBlank(entrustCreateDto.getEndDate()) || !TimeHelper.isValidDate(entrustCreateDto.getEndDate())){
+                return HttpResp.param("请传入结束日期");
+            }
+        }
 
-        //没设置开始时间 直接转交任务
-
-
+        //创建任务
+        taskEntrustService.createTaskEntrust(entrustCreateDto);
         return HttpResp.success();
     }
+
+
 }

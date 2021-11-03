@@ -1,7 +1,7 @@
 package com.cqcxi.flowEngine.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.cqcxi.flowEngine.enety.ModelStatus;
+import com.cqcxi.flowEngine.entity.ModelStatus;
 
 /**
  * <p>类描述： 流程表 </p>

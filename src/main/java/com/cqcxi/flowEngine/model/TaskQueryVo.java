@@ -1,6 +1,7 @@
 package com.cqcxi.flowEngine.model;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 /**

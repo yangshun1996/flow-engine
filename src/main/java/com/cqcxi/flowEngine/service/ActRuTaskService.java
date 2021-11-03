@@ -1,7 +1,7 @@
 package com.cqcxi.flowEngine.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.cqcxi.flowEngine.enety.ActRuTask;
+import com.cqcxi.flowEngine.entity.ActRuTask;
 import com.cqcxi.flowEngine.model.TaskQueryVo;
 
 import java.util.List;

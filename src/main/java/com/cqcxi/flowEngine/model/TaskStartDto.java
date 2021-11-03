@@ -1,5 +1,6 @@
 package com.cqcxi.flowEngine.model;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
  * <p>开发公司：重庆创信智能科技有限公司 </p>
  */
 @Data
+@ApiModel("启动流程")
 public class TaskStartDto {
 
     @ApiModelProperty("流程Id")

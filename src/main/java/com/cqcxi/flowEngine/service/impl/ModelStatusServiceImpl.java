@@ -1,7 +1,7 @@
 package com.cqcxi.flowEngine.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.cqcxi.flowEngine.enety.ModelStatus;
+import com.cqcxi.flowEngine.entity.ModelStatus;
 import com.cqcxi.flowEngine.mapper.ModelStatusMapper;
 import com.cqcxi.flowEngine.service.ModelStatusService;
 import org.springframework.stereotype.Service;

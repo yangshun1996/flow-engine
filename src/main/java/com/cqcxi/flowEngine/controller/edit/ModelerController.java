@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cqcxi.flowEngine.constant.CommonConstant;
-import com.cqcxi.flowEngine.enety.ModelStatus;
+import com.cqcxi.flowEngine.entity.ModelStatus;
 import com.cqcxi.flowEngine.service.ModelStatusService;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.editor.constants.ModelDataJsonConstants;

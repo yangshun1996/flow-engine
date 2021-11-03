@@ -4,12 +4,9 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.json.JSONObject;
 import com.cqcxi.flowEngine.common.ActResult;
 import com.cqcxi.flowEngine.common.HttpResp;
-import com.cqcxi.flowEngine.enety.ActRuTask;
+import com.cqcxi.flowEngine.entity.ActRuTask;
 import com.cqcxi.flowEngine.image.ProcessImageService;
-import com.cqcxi.flowEngine.model.TaskCompleteDto;
-import com.cqcxi.flowEngine.model.TaskParam;
-import com.cqcxi.flowEngine.model.TaskQueryVo;
-import com.cqcxi.flowEngine.model.TaskStartDto;
+import com.cqcxi.flowEngine.model.*;
 import com.cqcxi.flowEngine.service.ActivitiService;
 import com.cqcxi.flowEngine.service.ActRuTaskService;
 import io.swagger.annotations.Api;
@@ -115,6 +112,18 @@ public class ActivitiController {
         return HttpResp.success();
     }
 
+    @ApiOperation(value = "任务转交", httpMethod = "POST", response = Object.class, notes = "任务转交")
+    @ApiImplicitParams({
+    })
+    @RequestMapping("/task/forward")
+    public HttpResp forwardTask(
+            @RequestBody @Validated TaskForwardDto taskForwardDto
+            ){
+        activitiService.entrustTask(taskForwardDto.getTaskId(), taskForwardDto.getAssignee());
+        return HttpResp.success();
+    }
+
+
     @ApiOperation(value = "获取表单数据", httpMethod = "POST", response = Object.class, notes = "获取表单数据")
     @ApiImplicitParams({
             @ApiImplicitParam(name="taskId", value="任务Id", dataType="String", paramType="query", required=false),
@@ -143,8 +152,6 @@ public class ActivitiController {
 
         return HttpResp.success(jsonObject);
     }
-
-
 
     @ApiOperation(value = "生成图片", httpMethod = "POST", response = String.class, notes = "image")
     @ApiImplicitParams({
