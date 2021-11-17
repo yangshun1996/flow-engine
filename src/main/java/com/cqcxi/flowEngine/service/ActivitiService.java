@@ -57,7 +57,6 @@ public class ActivitiService {
     public ActResult startProcess (TaskStartDto startDto){
         Authentication.setAuthenticatedUserId(startDto.getUserId());//设置发起人
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(startDto.getProcessId(),startDto.getBusinessId());
-//        runtimeService.updateBusinessKey(processInstance.getProcessInstanceId(), startDto.getBusinessId());//设置业务Id
         return ActResult.success(processInstance.getProcessInstanceId());
     }
 

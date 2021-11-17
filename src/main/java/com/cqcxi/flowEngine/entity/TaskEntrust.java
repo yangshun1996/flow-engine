@@ -56,15 +56,6 @@ public class TaskEntrust implements Serializable {
      */
     private Date endHour;
 
-    /**
-     * CRON表达式
-     */
-    private String cron;
-
-    /**
-     * CRON表达式说明
-     */
-    private String cronNote;
 
     /**
      * 任务模式： 1.每天任务 2.周任务 3.月任务
@@ -99,8 +90,6 @@ public class TaskEntrust implements Serializable {
             && (this.getEndDate() == null ? other.getEndDate() == null : this.getEndDate().equals(other.getEndDate()))
             && (this.getStartHour() == null ? other.getStartHour() == null : this.getStartHour().equals(other.getStartHour()))
             && (this.getEndHour() == null ? other.getEndHour() == null : this.getEndHour().equals(other.getEndHour()))
-            && (this.getCron() == null ? other.getCron() == null : this.getCron().equals(other.getCron()))
-            && (this.getCronNote() == null ? other.getCronNote() == null : this.getCronNote().equals(other.getCronNote()))
             && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()));
     }
@@ -117,8 +106,6 @@ public class TaskEntrust implements Serializable {
         result = prime * result + ((getEndDate() == null) ? 0 : getEndDate().hashCode());
         result = prime * result + ((getStartHour() == null) ? 0 : getStartHour().hashCode());
         result = prime * result + ((getEndHour() == null) ? 0 : getEndHour().hashCode());
-        result = prime * result + ((getCron() == null) ? 0 : getCron().hashCode());
-        result = prime * result + ((getCronNote() == null) ? 0 : getCronNote().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         return result;
@@ -138,8 +125,6 @@ public class TaskEntrust implements Serializable {
         sb.append(", endDate=").append(endDate);
         sb.append(", startHour=").append(startHour);
         sb.append(", endHour=").append(endHour);
-        sb.append(", cron=").append(cron);
-        sb.append(", cronNote=").append(cronNote);
         sb.append(", type=").append(type);
         sb.append(", status=").append(status);
         sb.append(", serialVersionUID=").append(serialVersionUID);

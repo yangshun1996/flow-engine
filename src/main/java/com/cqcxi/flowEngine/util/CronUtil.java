@@ -1,6 +1,9 @@
 package com.cqcxi.flowEngine.util;
 
 
+import java.text.ParseException;
+import java.util.Date;
+
 /**
  * @ClassName: CronUtil 
  * @Description: Cron表达式工具类 
@@ -169,42 +172,5 @@ public class CronUtil {
         return description.toString();  
     }
 
-	/**
-	 *
-	 * @param rate 频率 0秒；1分；2小时；3日；4月
-	 * @param  cycle 周期
-	 * @return
-	 */
-	public static String createLoopCronExpression(int rate, int cycle) {
-        String cron = "";
-         switch (rate) {
-        case 0:// 每cycle秒执行一次
-             cron = "0/" + cycle + " * * * * ?";
-             break;
-         case 1:// 每cycle分钟执行一次
-             cron = "0 0/" + cycle + " * * * ?";
-             break;
-         case 2:// 每cycle小时执行一次
-            cron = "0 0 0/" + cycle + " * * ?";
-             break;
-        case 3:// 每cycle天的0点执行一次
-            cron = "0 0 0 1/" + cycle + " * ?";
-             break;
-        case 4:// 每cycle月的1号0点执行一次
-             cron = "0 0 0 1 1/" + cycle + " ? ";
-            break;
-        case 5://  每天cycle点执行一次
-             cron = "0 0 " + cycle+ "  * * ?";
-            break;
-      default:// 默认每cycle秒执行一次
-             cron = "0/1 * * * * ?";
-            break;
-         }
-         return cron;
-    }
 
-	public static void main(String[] args) {
-        TaskScheduleModel taskScheduleModel = new TaskScheduleModel();
-        taskScheduleModel.setJobType(4);
-    }
 }

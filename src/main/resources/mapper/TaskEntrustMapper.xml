@@ -13,8 +13,6 @@
             <result property="endDate" column="END_DATE" jdbcType="DATE"/>
             <result property="startHour" column="START_HOUR" jdbcType="TIME"/>
             <result property="endHour" column="END_HOUR" jdbcType="TIME"/>
-            <result property="cron" column="CRON" jdbcType="VARCHAR"/>
-            <result property="cronNote" column="CRON_NOTE" jdbcType="VARCHAR"/>
             <result property="type" column="TYPE" jdbcType="INTEGER"/>
             <result property="status" column="STATUS" jdbcType="INTEGER"/>
     </resultMap>
@@ -22,7 +20,55 @@
     <sql id="Base_Column_List">
         ID,ORIGINAL_ASSIGNEE_ID,ASSIGNEE_ID,
         DAY_OF_WEEK,START_DATE,END_DATE,
-        START_HOUR,END_HOUR,CRON,
-        CRON_NOTE,TYPE,STATUS
+        START_HOUR,END_HOUR,TYPE,STATUS
     </sql>
+    <select id="dayTaskExist" resultType="java.lang.Boolean">
+              SELECT
+        COUNT(* )
+        FROM
+        `task_entrust`
+        WHERE
+        type = 1
+        AND STATUS = 1
+        AND ORIGINAL_ASSIGNEE_ID = #{userId}
+        AND START_HOUR &lt;= #{end}
+        AND END_HOUR &gt;= #{start}
+    </select>
+
+    <select id="weekTaskExist" resultType="java.lang.Boolean">
+        SELECT
+            COUNT(* )
+        FROM
+            `task_entrust`
+        WHERE
+            type = 2
+            AND STATUS = 1
+            AND ORIGINAL_ASSIGNEE_ID = #{userId}
+            AND REPLACE ( DAY_OF_WEEK, ",", "|" ) REGEXP  REPLACE(#{days},",","|")
+            <if test="endHour != null">
+            AND START_HOUR &lt;= #{endHour}
+            </if>
+            <if test="startHour != null">
+            AND END_HOUR &gt;= #{startHour}
+            </if>
+    </select>
+
+    <select id="dateTaskExist" resultType="java.lang.Boolean">
+        SELECT
+        COUNT(* )
+        FROM
+        `task_entrust`
+        WHERE
+        type = 3
+        AND STATUS = 1
+        AND ORIGINAL_ASSIGNEE_ID = #{userId}
+        AND START_DATE &lt;= #{endDate}
+        AND END_DATE &gt;= #{startDate}
+        <if test="endHour != null">
+            AND START_HOUR &lt;= #{endHour}
+        </if>
+        <if test="startHour != null">
+            AND END_HOUR &gt;= #{startHour}
+        </if>
+    </select>
 </mapper>
