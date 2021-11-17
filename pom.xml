@@ -79,21 +79,6 @@
             <artifactId>batik-codec</artifactId>
             <version>1.7</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.apache.xmlgraphics</groupId>-->
-<!--            <artifactId>batik-css</artifactId>-->
-<!--            <version>1.7</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.xmlgraphics</groupId>-->
-<!--            <artifactId>batik-svg-dom</artifactId>-->
-<!--            <version>1.7</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.xmlgraphics</groupId>-->
-<!--            <artifactId>batik-svggen</artifactId>-->
-<!--            <version>1.7</version>-->
-<!--        </dependency>-->
         <!-- activiti  end-->
 
         <!-- lombok -->
@@ -145,11 +130,6 @@
             <version>8.0.26</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.hibernate</groupId>-->
-<!--            <artifactId>hibernate-validator</artifactId>-->
-<!--            <version>5.3.5.Final</version>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>javax.validation</groupId>
@@ -173,8 +153,6 @@
             <artifactId>javax.el</artifactId>
             <version>2.2.6</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
